@@ -31,7 +31,7 @@ const appMenu = () => {
                 message: "Manager's ID number",
                 validate: answer => {
                     const valCheck = answer.match(
-                        /\S+@\S+\.\S+/
+                        /^[1-9]\d*$/
                     );
                     if (valCheck) {
                         return true;
@@ -68,60 +68,60 @@ const appMenu = () => {
                 }
             }
         ]).then(answer => {
-            const manager = new Manager(answers.managerName, answers.managerId, answers.managerEmail, answers.managerOfficeNumber);
-            teamMembers.push(manager);
-            idArray.push(answers.managerId);
+            const manager = new Manager(answer.managerName, answer.managerId, answer.managerEmail, answer.managerOfficeNumber);
+            team.push(manager);
+            idArray.push(answer.managerId);
             createTeam();
         });
     }
-}
 
-const createTeam = () => {
-    inquirer.prompt([
-        {
-            type: 'list',
-            name: 'memberChoice',
-            message: 'Select team member type:',
-            choices: [
-                "Engineer",
-                "Intern",
-                "None"
-            ]
-        }
-    ]).then(userChoice => {
-        switch(userChoice.memberChoice) {
-            case "Engineer":
-                addEngineer();
-                break;
-            case "Intern":
-                addIntern();
-                break;
-            default:
-                buildTeam();
-        }
-    });
-};
 
-const addEngineer = () => {
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "engineerName",
-            message: "Engineer's name:",
-            validate: answer => {
-                if (answer !== "") {
-                  return true;
-                }
-                return "Minimun input is 1 character";
+    const createTeam = () => {
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'memberChoice',
+                message: 'Select team member type:',
+                choices: [
+                    "Engineer",
+                    "Intern",
+                    "None"
+                ]
             }
-        },
-        {
+        ]).then(userChoice => {
+            switch(userChoice.memberChoice) {
+                case "Engineer":
+                    addEngineer();
+                    break;
+                case "Intern":
+                    addIntern();
+                    break;
+                default:
+                    buildTeam();
+            }
+        });
+    };
+
+    const addEngineer = () => {
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "engineerName",
+                message: "Engineer's name:",
+                validate: answer => {
+                    if (answer !== "") {
+                    return true;
+                    }
+                    return "Minimun input is 1 character";
+                }
+            },
+            {
             type: "input",
             name: "engineerId",
             message: "Engineer's ID number",
             validate: answer => {
                 const valCheck = answer.match(
-                        /\S+@\S+\.\S+/
+                    /^[1-9]\d*$/
                     );
                     if (valCheck) {
                         return true;
@@ -158,74 +158,75 @@ const addEngineer = () => {
                 }
             }
         ]).then(answer => {
-            const engineer = new Engineer(answers.engineerName, answers.engineerId, answers.engineerEmail, answers.engineerPhoneNumber);
+            const engineer = new Engineer(answer.engineerName, answer.engineerId, answer.engineerEmail, answer.engineerPhoneNumber);
             team.push(engineer);
-            idArray.push(answers.managerId);
+            idArray.push(answer.managerId);
             createTeam();
-    });
-}
-const addIntern = () => {
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "internName",
-            message: "Intern's name:",
-            validate: answer => {
-                if (answer !== "") {
-                  return true;
-                }
-                return "Minimun input is 1 character";
-            }
-        },
-        {
-            type: "input",
-            name: "internId",
-            message: "Intern's ID number",
-            validate: answer => {
-                const valCheck = answer.match(
-                        /\S+@\S+\.\S+/
-                    );
-                    if (valCheck) {
-                        return true;
-                    }
-                    return "Invalid ID format."
-                }
-            },
+        });
+    }
+
+    const addIntern = () => {
+        inquirer.prompt([
             {
-                type: 'input',
-                name: 'internEmail',
-                message: "Intern's email?",
+                type: "input",
+                name: "internName",
+                message: "Intern's name:",
                 validate: answer => {
-                    const valCheck = answer.match(
-                        /\S+@\S+\.\S+/
-                    );
-                    if (valCheck) {
-                        return true;
+                    if (answer !== "") {
+                    return true;
                     }
-                    return "Invalid email"
+                    return "Minimun input is 1 character";
                 }
             },
             {
-                type: 'input',
-                name: "internPhoneNumber",
-                message: "Intern's office phone number",
+                type: "input",
+                name: "internId",
+                message: "Intern's ID number",
                 validate: answer => {
                     const valCheck = answer.match(
                         /^[1-9]\d*$/
-                    );
-                    if (valCheck) {
-                        return true;
+                        );
+                        if (valCheck) {
+                            return true;
+                        }
+                        return "Invalid ID format."
                     }
-                    return "Invalid phone input"
+                },
+                {
+                    type: 'input',
+                    name: 'internEmail',
+                    message: "Intern's email?",
+                    validate: answer => {
+                        const valCheck = answer.match(
+                            /\S+@\S+\.\S+/
+                        );
+                        if (valCheck) {
+                            return true;
+                        }
+                        return "Invalid email"
+                    }
+                },
+                {
+                    type: 'input',
+                    name: "internPhoneNumber",
+                    message: "Intern's office phone number",
+                    validate: answer => {
+                        const valCheck = answer.match(
+                            /^[1-9]\d*$/
+                        );
+                        if (valCheck) {
+                            return true;
+                        }
+                        return "Invalid phone input"
+                    }
                 }
-            }
-        ]).then(answer => {
-            const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internPhoneNumber);
-            team.push(intern);
-            idArray.push(answers.managerId);
-            createTeam();
-    });
-
+            ]).then(answer => {
+                const intern = new Intern(answer.internName, answer.internId, answer.internEmail, answer.internPhoneNumber);
+                team.push(intern);
+                idArray.push(answer.managerId);
+                createTeam();
+        });
+    }
 
     const buildTeam = () => {
         if(!fs.existsSync(OUTPUT_DIR)) {
@@ -233,6 +234,9 @@ const addIntern = () => {
         }
         fs.writeFileSync(outputPath, render(team), "utf-8")
     }
+
     createManager()
+   
 }
-appMenu()
+
+    appMenu()
